@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boolcat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Boolcat</h1>
+    <div id="game-container">
+        <div id="game-start-screen">
+            <p>Instructions: Use arrow keys to move the cat and catch mice. Catch 10 mice to earn a star. Earn 5 stars to win the game.</p>
+            <button id="game-start-button">Start Game</button>
+        </div>
+        <div id="game-canvas" style="display: none;">
+            <div id="cat"></div>
+        </div>
+        <div id="mouse-jail">
+            <div id="star-container"></div>
+        </div>
+    </div>
+    <div id="win-banner" style="display: none;">
+      <p>You win!</p>
+      <button id="restart-game-button">Play Again</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

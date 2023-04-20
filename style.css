@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Press Start 2P', cursive;
+  background-color: #f0f0f0;
+}
+
+h1 {
+  margin-bottom: 16px;
+}
+
+#game-container {
+  display: flex;
+}
+
+#game-start-screen,
+#win-banner {
+  text-align: center;
+}
+
+#game-canvas {
+  width: 800px;
+  height: 600px;
+  border: 1px solid black;
+  position: relative;
+  overflow: hidden;
+  background-color: #a0a0a0;
+}
+
+#cat {
+  width: 50px;
+  height: 50px;
+  background-image: url('cat.gif');
+  position: absolute;
+}
+
+.mouse {
+  width: 25px;
+  height: 25px;
+  background-image: url('mouse.gif');
+  position: absolute;
+}
+
+#mouse-jail {
+  width: 200px;
+  height: 600px;
+  border: 1px solid black;
+  position: relative;
+  margin-left: 16px;
+  background-color: #c0c0c0;
+}
+
+#star-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.star {
+  width: 40px;
+  height: 40px;
+  background-image: url('star.gif');
+  margin: 8px;
+}
