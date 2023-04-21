@@ -3,28 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boolcat</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>boolcat</title>
+    
     <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+    
 </head>
 <body>
-    <h1>Boolcat</h1>
     <div id="game-container">
-        <div id="game-start-screen">
-            <p>Instructions: Use arrow keys to move the cat and catch mice. Catch 10 mice to earn a star. Earn 5 stars to win the game.</p>
-            <button id="game-start-button">Start Game</button>
-        </div>
-        <div id="game-canvas" style="display: none;">
-            <div id="cat"></div>
-        </div>
-        <div id="mouse-jail">
+        <button id="game-start-button">start game</button>
+        <div id="game-canvas">
+            <div id="mouse-jail"></div>
             <div id="star-container"></div>
+            <div id="cat" class="cat"></div>
         </div>
+        <div id="win-banner">congratulations! you won!</div>
+        <button id="restart-game-button">restart the game</button>
     </div>
-    <div id="win-banner" style="display: none;">
-      <p>You win!</p>
-      <button id="restart-game-button">Play Again</button>
-    </div>
-    <script src="script.js"></script>
 </body>
 </html>

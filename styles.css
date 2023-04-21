@@ -1,70 +1,93 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=block');
 
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-family: 'Press Start 2P', cursive;
-  background-color: #f0f0f0;
+.hidden {
+  display: none;
 }
 
-h1 {
-  margin-bottom: 16px;
+body {
+  font-family: 'Press Start 2P', cursive;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
 }
 
 #game-container {
   display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-#game-start-screen,
-#win-banner {
-  text-align: center;
+#game-start-button,
+#restart-game-button {
+  font-size: 24px;
+  padding: 12px 24px;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin: 10px;
+}
+
+#game-start-button:hover,
+#restart-game-button:hover {
+  background-color: #45a049;
 }
 
 #game-canvas {
+  position: relative;
   width: 800px;
   height: 600px;
-  border: 1px solid black;
-  position: relative;
-  overflow: hidden;
-  background-color: #a0a0a0;
+  background-color: #ffffff;
+  border: 2px solid #000000;
 }
 
-#cat {
-  width: 50px;
-  height: 50px;
-  background-image: url('images/cat.gif');
+.cat,
+.mouse {
   position: absolute;
+  width: 25px;
+  height: 25px;
+}
+
+.cat {
+  background-color: #ff0000;
 }
 
 .mouse {
-  width: 25px;
-  height: 25px;
-  background-image: url('images/mouse.gif');
-  position: absolute;
+  background-color: #00ff00;
 }
 
 #mouse-jail {
-  width: 200px;
-  height: 600px;
-  border: 1px solid black;
-  position: relative;
-  margin-left: 16px;
-  background-color: #c0c0c0;
+  position: absolute;
+  width: 250px;
+  height: 125px;
+  background-color: #cccccc;
+  border: 1px solid #000000;
+  left: 0;
+  top: 0;
 }
 
 #star-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  width: 150px;
+  height: 40px;
+  right: 0;
+  top: 0;
 }
 
 .star {
-  width: 40px;
-  height: 40px;
-  background-image: url('images/star.gif');
-  margin: 8px;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-image: url('star-image-url');
+  background-size: cover;
+}
+
+#win-banner {
+  font-size: 24px;
+  display: none;
+  margin-top: 20px;
 }
