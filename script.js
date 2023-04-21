@@ -5,28 +5,153 @@ const mouseJail = document.getElementById('mouse-jail');
 const winBanner = document.getElementById('win-banner');
 const restartGameButton = document.getElementById('restart-game-button');
 const starContainer = document.getElementById('star-container');
+const gameInstruction = document.getElementById('game-instruction');
+const keysPressed = {
+  ArrowUp: false,
+  ArrowDown: false,
+  ArrowLeft: false,
+  ArrowRight: false,
+};
+const catMoveDistance = 10;
 
 gameStartButton.addEventListener('click', startGame);
 restartGameButton.addEventListener('click', restartGame);
 
 function startGame() {
-  gameStartButton.parentElement.classList.add('hidden');
-  gameCanvas.classList.remove('hidden'); // Changed this line
-  winBanner.classList.add('hidden'); // Changed this line
-  gameCanvas.classList.add('hidden'); 
-  
-  
+  gameInstruction.style.display = "none";
+  gameCanvas.style.display = "block";
+  restartGameButton.style.display = "block";
+  initializeGame();
+}
+
+function initializeGame() {
+  winBanner.classList.add('hidden');
+
   cat.style.left = '375px';
   cat.style.top = '275px';
   spawnMouse();
 }
 
-
 function restartGame() {
   winBanner.classList.add('hidden');
-
+  gameCanvas.querySelectorAll('.mouse').forEach((mouse) => mouse.remove());
+  mouseJail.innerHTML = '';
   startGame();
 }
+
+document.addEventListener('keydown', (event) => {
+  const key = event.key;
+
+  if (key in keysPressed) {
+    keysPressed[key] = true;
+    event.preventDefault(); // Prevent scrolling
+  }
+});
+
+document.addEventListener('keyup', (event) => {
+  const key = event.key;
+
+  if (key in keysPressed) {
+    keysPressed[key] = false;
+  }
+});
+
+function moveCat() {
+  let currentTop = parseInt(cat.style.top);
+  let currentLeft = parseInt(cat.style.left);
+
+  if (keysPressed.ArrowUp) {
+    currentTop -= catMoveDistance;
+  }
+  if (keysPressed.ArrowDown) {
+    currentTop += catMoveDistance;
+  }
+  if (keysPressed.ArrowLeft) {
+    currentLeft -= catMoveDistance;
+  }
+  if (keysPressed.ArrowRight) {
+    currentLeft += catMoveDistance;
+  }
+
+  cat.style.top = Math.max(0, Math.min(555, currentTop)) + 'px';
+  cat.style.left = Math.max(0, Math.min(755, currentLeft)) + 'px';
+
+  checkForCollisions();
+  requestAnimationFrame(moveCat);
+}
+
+
+let miceOnScreen = 0;
+const maxMiceOnScreen = 5;
+
+function spawnMouse() {
+  if (miceOnScreen < maxMiceOnScreen) {
+    miceOnScreen++;
+    const mouse = document.createElement('div');
+    mouse.classList.add('mouse');
+    let randomX = Math.floor(Math.random() * 31) * 25;
+    let randomY = Math.floor(Math.random() * 23) * 25;
+    mouse.style.left = randomX + 'px';
+    mouse.style.top = randomY + 'px';
+    gameCanvas.appendChild(mouse);
+  }
+}
+
+
+function moveMice() {
+  const mice = document.querySelectorAll('.mouse');
+  mice.forEach((mouse) => {
+    let currentLeft = parseInt(mouse.style.left);
+    let currentTop = parseInt(mouse.style.top);
+
+    let moveX = (Math.random() * 2 - 1) * 25;
+    let moveY = (Math.random() * 2 - 1) * 25;
+
+    mouse.style.left = Math.max(0, Math.min(775, currentLeft + moveX)) + 'px';
+    mouse.style.top = Math.max(0, Math.min(575, currentTop + moveY)) + 'px';
+  });
+}
+
+function initializeGame() {
+  winBanner.classList.add('hidden');
+  cat.style.left = '375px';
+  cat.style.top = '275px';
+  spawnMouse();
+  setInterval(spawnMouse, 2000); 
+  setInterval(moveMice, 1000); 
+  moveCat();
+}
+
+function checkForCollisions() {
+  const catRect = cat.getBoundingClientRect();
+  const mice = document.querySelectorAll('.mouse');
+  mice.forEach((mouse) => {
+    const mouseRect = mouse.getBoundingClientRect();
+    if (catRect.left < mouseRect.left + mouseRect.width &&
+        catRect.left + catRect.width > mouseRect.left &&
+        catRect.top < mouseRect.top + mouseRect.height &&
+        catRect.top + catRect.height > mouseRect.top) {
+      mouse.remove();
+      addToMouseJail();
+      spawnMouse();
+    }
+  });
+}
+
+function addToMouseJail() {
+  const miceInJail = mouseJail.childElementCount;
+  if (miceInJail < 50) {
+    const newMouse = document.createElement('div');
+    newMouse.classList.add('mouse');
+    newMouse.style.left = 8 + (25 * (miceInJail % 10)) + 'px';
+    newMouse.style.top = 8 + (25 * Math.floor(miceInJail / 10)) + 'px';
+    mouseJail.appendChild(newMouse);
+    updateStars(Math.floor((miceInJail + 1) / 10));
+  } else {
+    winGame();
+  }
+}
+
 
 function updateStars(earnedStars) {
   starContainer.innerHTML = '';
@@ -35,93 +160,44 @@ function updateStars(earnedStars) {
     const star = document.createElement('div');
     star.classList.add('star');
     star.style.left = 8 + (25 * i) + 'px';
-    star.style.top = '8px';
+    star.style.top = '30px';
     starContainer.appendChild(star);
   }
-}
-
-document.addEventListener('keydown', (event) => {
-  const key = event.key;
-
-  let currentTop = parseInt(cat.style.top);
-  let currentLeft = parseInt(cat.style.left);
-
-  let moveUp = key === 'ArrowUp' || key === 'w';
-  let moveDown = key === 'ArrowDown' || key === 's';
-  let moveLeft = key === 'ArrowLeft' || key === 'a';
-  let moveRight = key === 'ArrowRight' || key === 'd';
-
-  if (moveUp || moveDown || moveLeft || moveRight) {
-    event.preventDefault(); // Prevent scrolling
-  }
-
-  if (moveUp) {
-    currentTop -= 25;
-  }
-  if (moveDown) {
-    currentTop += 25;
-  }
-  if (moveLeft) {
-    currentLeft -= 25;
-  }
-  if (moveRight) {
-    currentLeft += 25;
-  }
-
-  cat.style.top = Math.max(0, Math.min(575, currentTop)) + 'px';
-  cat.style.left = Math.max(0, Math.min(775, currentLeft)) + 'px';
-
-  checkForCollisions();
-});
-function addToMouseJail() {
-  const miceInJail = mouseJail.childElementCount;
-  if (miceInJail < 49) {
-    const newMouse = document.createElement('div');
-    newMouse.classList.add('mouse');
-    newMouse.style.left = 8 + (25 * (miceInJail % 10)) + 'px';
-    newMouse.style.top = 8 + (25 * Math.floor(miceInJail / 10)) + 'px';
-    mouseJail.appendChild(newMouse);
-    updateStars(miceInJail + 1);
-  } else {
-    winGame();
-  }
-}
-
-function updateStars(miceInJail) {
-  const starsEarned = Math.floor(miceInJail / 10);
-  starContainer.innerHTML = '';
-  for (let i = 0; i < starsEarned; i++) {
-    const star = document.createElement('div');
-    star.classList.add('star');
-    starContainer.appendChild(star);
-  }
-
-  if (starsEarned === 5) {
-    winGame();
-  }
-}
-function spawnMouse() {
-  const mouse = document.createElement('div');
-  mouse.classList.add('mouse');
-  mouse.style.left = Math.floor(Math.random() * 31) * 25 + 'px';
-  mouse.style.top = Math.floor(Math.random() * 23) * 25 + 'px';
-  gameCanvas.appendChild(mouse);
-}
-
-function checkForCollisions() {
-  const catRect = cat.getBoundingClientRect();
-  const mice = document.querySelectorAll('.mouse');
-  mice.forEach((mouse) => {
-    const mouseRect = mouse.getBoundingClientRect();
-    if (catRect.left === mouseRect.left && catRect.top === mouseRect.top) {
-      mouse.remove();
-      addToMouseJail();
-      spawnMouse();
-    }
-  });
 }
 
 function winGame() {
   gameCanvas.style.display = 'none';
   winBanner.style.display = 'block';
 }
+
+let touchStartX = null;
+let touchStartY = null;
+
+document.addEventListener('touchstart', (event) => {
+  touchStartX = event.touches[0].clientX;
+  touchStartY = event.touches[0].clientY;
+});
+
+document.addEventListener('touchmove', (event) => {
+  event.preventDefault();
+
+  let currentTop = parseInt(cat.style.top);
+  let currentLeft = parseInt(cat.style.left);
+
+  const touchCurrentX = event.touches[0].clientX;
+  const touchCurrentY = event.touches[0].clientY;
+
+  const moveX = touchCurrentX - touchStartX;
+  const moveY = touchCurrentY - touchStartY;
+
+  cat.style.top = Math.max(0, Math.min(575, currentTop + moveY)) + 'px';
+  cat.style.left = Math.max(0, Math.min(775, currentLeft + moveX)) + 'px';
+
+  touchStartX = touchCurrentX;
+  touchStartY = touchCurrentY;
+
+  checkForCollisions();
+
+
+  
+});

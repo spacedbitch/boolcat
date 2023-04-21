@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>boolcat</title>
-    
+    <title>Boolcat</title>
     <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
-    
 </head>
 <body>
+    <h1>Boolcat</h1>
     <div id="game-container">
-        <button id="game-start-button">start game</button>
+        <div id="game-instruction">
+          <p>Press arrow keys to move the cat and catch the mice. For mobile devices, tap and drag to move the cat.</p>
+          <button id="game-start-button" onclick="startGame()">Start Game</button>
+        </div>
         <div id="game-canvas">
             <div id="mouse-jail"></div>
             <div id="star-container"></div>
             <div id="cat" class="cat"></div>
         </div>
         <div id="win-banner">congratulations! you won!</div>
-        <button id="restart-game-button">restart the game</button>
+        <button id="restart-game-button">Play again</button>
     </div>
+    <script defer src="script.js"></script>
 </body>
 </html>
+

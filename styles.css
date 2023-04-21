@@ -4,10 +4,21 @@
   display: none;
 }
 
+h1 {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: 36px;
+}
+
+
 body {
   font-family: 'Press Start 2P', cursive;
   background-color: #f4f4f4;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   height: 100vh;
@@ -15,13 +26,22 @@ body {
   overflow: hidden;
 }
 
+
 #game-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-#game-start-button,
+#game-instruction {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
 #restart-game-button {
   font-size: 24px;
   padding: 12px 24px;
@@ -45,30 +65,48 @@ body {
   border: 2px solid #000000;
 }
 
+#game-canvas,       /* this hides game screen/restart until initiated */
+#restart-game-button {
+  display: none;
+}
+
+
+.star {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background-image: url('images/star.gif');
+  background-size: cover;
+}
+
 .cat,
 .mouse {
   position: absolute;
-  width: 25px;
-  height: 25px;
+  width: 40px;
+  height: 40px;
 }
 
 .cat {
-  background-color: #ff0000;
+  background-image: url('images/cat.gif');
+  background-size: cover;
 }
 
 .mouse {
-  background-color: #00ff00;
+  background-image: url('images/mouse.gif');
+  background-size: cover;
 }
 
 #mouse-jail {
   position: absolute;
-  width: 250px;
+  width: 220px;
   height: 125px;
   background-color: #cccccc;
-  border: 1px solid #000000;
-  left: 0;
-  top: 0;
+  border: 2px solid #000000;
+  left: calc(-65% + 400px);
+  top: 25%;
+  transform: translate(-50%, -50%);
 }
+
 
 #star-container {
   position: absolute;
@@ -78,13 +116,6 @@ body {
   top: 0;
 }
 
-.star {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background-image: url('star-image-url');
-  background-size: cover;
-}
 
 #win-banner {
   font-size: 24px;
