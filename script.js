@@ -26,18 +26,36 @@ function startGame() {
 
 function initializeGame() {
   winBanner.classList.add('hidden');
-
   cat.style.left = '375px';
   cat.style.top = '275px';
   spawnMouse();
+  setInterval(spawnMouse, 4000); // Slow down mouse generation
+  setInterval(moveMice, 1000);
+  moveCat();
+  restartGameButton.style.display = "none"; // Hide the "Play Again" button
+}
+
+function winGame() {
+  gameCanvas.style.display = 'none';
+  winBanner.style.display = 'block';
+  restartGameButton.style.display = "block"; // Show the "Play Again" button
 }
 
 function restartGame() {
   winBanner.classList.add('hidden');
   gameCanvas.querySelectorAll('.mouse').forEach((mouse) => mouse.remove());
   mouseJail.innerHTML = '';
+  starContainer.innerHTML = ''; // Clear the star count
+
+  // Reset the display styles
+  gameInstruction.style.display = "block";
+  gameCanvas.style.display = "none";
+  restartGameButton.style.display = "none";
+  winBanner.style.display = "none";
+
   startGame();
 }
+
 
 document.addEventListener('keydown', (event) => {
   const key = event.key;
@@ -114,13 +132,23 @@ function moveMice() {
 
 function initializeGame() {
   winBanner.classList.add('hidden');
+
   cat.style.left = '375px';
   cat.style.top = '275px';
+
+  // Reset the miceOnScreen variable
+  miceOnScreen = 0;
+
+  // Clear the existing mice
+  gameCanvas.querySelectorAll('.mouse').forEach((mouse) => mouse.remove());
+
+  // Spawn the initial mouse and set up the intervals for spawning and moving mice
   spawnMouse();
-  setInterval(spawnMouse, 2000); 
-  setInterval(moveMice, 1000); 
+  setInterval(spawnMouse, 2000);
+  setInterval(moveMice, 1000);
   moveCat();
 }
+
 
 function checkForCollisions() {
   const catRect = cat.getBoundingClientRect();
@@ -132,11 +160,13 @@ function checkForCollisions() {
         catRect.top < mouseRect.top + mouseRect.height &&
         catRect.top + catRect.height > mouseRect.top) {
       mouse.remove();
+      miceOnScreen--; // Decrement the miceOnScreen variable
       addToMouseJail();
       spawnMouse();
     }
   });
 }
+
 
 function addToMouseJail() {
   const miceInJail = mouseJail.childElementCount;

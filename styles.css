@@ -13,7 +13,6 @@ h1 {
   font-size: 36px;
 }
 
-
 body {
   font-family: 'Press Start 2P', cursive;
   background-color: #f4f4f4;
@@ -25,7 +24,6 @@ body {
   margin: 0;
   overflow: hidden;
 }
-
 
 #game-container {
   display: flex;
@@ -42,20 +40,27 @@ body {
   text-align: center;
 }
 
+#game-start-button,
 #restart-game-button {
   font-size: 24px;
+  font-family: 'Press Start 2P', cursive; /* Use the pixel font */
   padding: 12px 24px;
   background-color: #4CAF50;
   border: none;
   color: white;
   cursor: pointer;
   margin: 10px;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4); /* Add a shadow to create dimension */
+  opacity: 0.9; /* Add some opacity */
+  transition: opacity 0.2s, background-color 0.2s; /* Add transition for hover effect */
 }
 
 #game-start-button:hover,
 #restart-game-button:hover {
   background-color: #45a049;
+  opacity: 1; /* Increase opacity on hover */
 }
+
 
 #game-canvas {
   position: relative;
@@ -63,11 +68,22 @@ body {
   height: 600px;
   background-color: #ffffff;
   border: 2px solid #000000;
+  margin: 70px auto 0; /* Add a margin to make room for the title */
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5); /* Add a shadow to create a 3D effect */
 }
 
 #game-canvas,       /* this hides game screen/restart until initiated */
 #restart-game-button {
   display: none;
+}
+
+#game-title {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10; /* Make sure the title is above other elements */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a shadow to the title */
 }
 
 
