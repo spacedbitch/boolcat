@@ -25,29 +25,27 @@ function startGame() {
 
 function initializeGame() {
   winBanner.classList.add('hidden');
-  restartGameButton.style.display = 'none'; // Hide the "Play again" button
+  restartGameButton.style.display = 'none';
   cat.style.left = '375px';
   cat.style.top = '275px';
   spawnMouse();
-  setInterval(spawnMouse, 1200);
-  setInterval(moveMice, 2000);
+  setInterval(() => spawnMouse(), 1200);
+  setInterval(() => moveMice(gameCanvas, 10, 910, 10, 510), 2000); // Update this line
   moveCat();
 }
-
 
 function winGame() {
   gameCanvas.style.display = 'none';
   winBanner.style.display = 'block';
-  restartGameButton.style.display = "block"; // Show the "Play Again" button
+  restartGameButton.style.display = "block";
 }
 
 function restartGame() {
   winBanner.classList.add('hidden');
   gameCanvas.querySelectorAll('.mouse').forEach((mouse) => mouse.remove());
   mouseJail.innerHTML = '';
-  starContainer.innerHTML = ''; // Clear the star count
+  starContainer.innerHTML = '';
 
-  // Reset the display styles
   gameInstruction.style.display = "block";
   gameCanvas.style.display = "none";
   restartGameButton.style.display = "none";
@@ -56,13 +54,12 @@ function restartGame() {
   startGame();
 }
 
-
 document.addEventListener('keydown', (event) => {
   const key = event.key;
 
   if (key in keysPressed) {
     keysPressed[key] = true;
-    event.preventDefault(); // Prevent scrolling
+    event.preventDefault();
   }
 });
 
@@ -91,179 +88,114 @@ function moveCat() {
     currentLeft += catMoveDistance;
   }
 
-  cat.style.top = Math.max(0, Math.min(460, currentTop)) + 'px';
-  cat.style.left = Math.max(0, Math.min(755, currentLeft)) + 'px';
+  cat.style.top = Math.max(0, Math.min(525, currentTop)) + 'px';
+  cat.style.left = Math.max(0, Math.min(925, currentLeft)) + 'px';
 
-  checkForCollisions();
+  checkForCollisions(); // Remove the checkForEscape() function call
   requestAnimationFrame(moveCat);
 }
-
 
 let miceOnScreen = 0;
 const maxMiceOnScreen = 3;
 
 function spawnMouse() {
-  if (miceOnScreen < maxMiceOnScreen) {
-    miceOnScreen++;
-    const mouse = document.createElement('div');
-    mouse.classList.add('mouse');
-    let randomX = Math.floor(Math.random() * (775 - 25 + 1)) + 25;
-    let randomY = Math.floor(Math.random() * (475 - 25 + 1)) + 25;
-    mouse.style.left = randomX + 'px';
-    mouse.style.top = randomY + 'px';
-    gameCanvas.appendChild(mouse);
-  }
-}
+  const mouse = document.createElement('div');
+  mouse.classList.add('mouse');
 
+  const randomLeft = Math.floor(Math.random() * 876) + 50;
+  const randomTop = Math.floor(Math.random() * 476) + 50;
+
+  mouse.style.left = randomLeft + 'px';
+  mouse.style.top = randomTop + 'px';
+
+  gameCanvas.appendChild(mouse);
+}
 
 function moveMice(container, minLeft, maxLeft, minTop, maxTop) {
   const mice = container.querySelectorAll('.mouse');
+
   mice.forEach((mouse) => {
-    let currentLeft = parseInt(mouse.style.left);
-    let currentTop = parseInt(mouse.style.top);
+    const currentLeft = parseInt(mouse.style.left);
+    const currentTop = parseInt(mouse.style.top);
 
-    let moveX = (Math.random() * 2 - 1) * 25;
-    let moveY = (Math.random() * 2 - 1) * 25;
+    const newLeft = currentLeft + Math.floor(Math.random() * 21) - 10;
+    const newTop = currentTop + Math.floor(Math.random() * 21) - 10;
 
-    mouse.style.left = Math.max(minLeft, Math.min(maxLeft, currentLeft + moveX)) + 'px';
-    mouse.style.top = Math.max(minTop, Math.min(maxTop, currentTop + moveY)) + 'px';
+    mouse.style.left = Math.max(minLeft, Math.min(maxLeft, newLeft)) + 'px';
+    mouse.style.top = Math.max(minTop, Math.min(maxTop, newTop)) + 'px';
+
+    if (container === gameCanvas && (newLeft <= minLeft || newTop <= minTop || newLeft >= maxLeft || newTop >= maxTop)) {
+      displayEscapingMessage(); // Add this line to display the message when a mouse is near the border
+    }
   });
 }
 
+// Add a new variable to keep track of the currently attached mouse
+let attachedMouse = null;
 
+function displayEscapingMessage() {
+  const escapingMessage = document.createElement('div');
+  escapingMessage.classList.add('escaping-message');
+  escapingMessage.textContent = "Hurry, they're escaping!";
+  gameCanvas.appendChild(escapingMessage);
 
-function initializeGame() {
-  winBanner.classList.add('hidden');
-
-  cat.style.left = '375px';
-  cat.style.top = '275px';
-
-  // Reset the miceOnScreen variable
-  miceOnScreen = 0;
-
-  // Clear the existing mice
-  gameCanvas.querySelectorAll('.mouse').forEach((mouse) => mouse.remove());
-
-  // Spawn the initial mouse and set up the intervals for spawning and moving mice
-  spawnMouse();
-  setInterval(spawnMouse, 2000);
-  setInterval(() => moveMice(gameCanvas, 0, 775, 0, 500), 1000); // Move mice in the game screen
-  setInterval(() => moveMice(mouseJail, 5, 225, 8, 87), 1000);
-  
-  moveCat();
+  setTimeout(() => {
+    escapingMessage.remove();
+  }, 2000);
 }
-
 
 function checkForCollisions() {
   const catRect = cat.getBoundingClientRect();
   const mice = document.querySelectorAll('.mouse');
+
   mice.forEach((mouse) => {
     const mouseRect = mouse.getBoundingClientRect();
-    if (catRect.left < mouseRect.left + mouseRect.width &&
-        catRect.left + catRect.width > mouseRect.left &&
-        catRect.top < mouseRect.top + mouseRect.height &&
-        catRect.top + catRect.height > mouseRect.top) {
-      mouse.remove();
-      miceOnScreen--; // Decrement the miceOnScreen variable
-      addToMouseJail();
-      spawnMouse();
-    }
-  });
-}
 
+    if (catRect.left < mouseRect.right &&
+        catRect.right > mouseRect.left &&
+        catRect.top < mouseRect.bottom &&
+        catRect.bottom > mouseRect.top &&
+        !attachedMouse) {
 
-function addToMouseJail() {
-  const miceInJail = mouseJail.childElementCount;
-  if (miceInJail < 50) {
-    const newMouse = document.createElement('div');
-    newMouse.classList.add('mouse');
-    newMouse.style.left = 8 + (25 * (miceInJail % 10)) + 'px';
-    newMouse.style.top = 8 + (25 * Math.floor(miceInJail / 10)) + 'px';
-    mouseJail.appendChild(newMouse);
-    updateStars(Math.floor((miceInJail + 1) / 10));
-  } else {
-    winGame();
-  }
-}
-
-function checkForEscape() {
-  const escapeWarning = document.getElementById('escape-warning');
-  const mice = document.querySelectorAll('.mouse');
-  let showWarning = false;
-
-  mice.forEach((mouse) => {
-    const mouseX = parseInt(mouse.style.left);
-    const mouseY = parseInt(mouse.style.top);
-    const jailBounds = mouseJail.getBoundingClientRect();
-    const closeToEdge = mouseX < jailBounds.left + 10 || mouseX > jailBounds.right - 50 || mouseY < jailBounds.top + 10 || mouseY > jailBounds.bottom - 50;
-
-    if (closeToEdge) {
-      showWarning = true;
+      // Attach the mouse to the cat
+      attachedMouse = mouse;
+      mouse.classList.add('attached');
     }
   });
 
-  if (showWarning) {
-    escapeWarning.classList.remove('hidden');
-  } else {
-    escapeWarning.classList.add('hidden');
+  if (attachedMouse) {
+    const mouseJailRect = mouseJail.getBoundingClientRect();
+
+    if (catRect.left < mouseJailRect.right &&
+        catRect.right > mouseJailRect.left &&
+        catRect.top < mouseJailRect.bottom &&
+        catRect.bottom > mouseJailRect.top) {
+
+      // Detach the mouse from the cat and add it to the mouse jail
+      attachedMouse.classList.remove('attached');
+      mouseJail.appendChild(attachedMouse);
+      attachedMouse = null;
+      updateStarCounter();
+      checkWinCondition();
+    }
   }
 }
 
-function moveMice() {
+let caughtMiceCounter = 0;
+const totalMiceToWin = 50;
 
-  checkForEscape(); // Call the checkForEscape function
-}
+function updateStarCounter() {
+  caughtMiceCounter++;
 
-
-
-function updateStars(earnedStars) {
-  starContainer.innerHTML = '';
-
-  for (let i = 0; i < earnedStars; i++) {
+  if (caughtMiceCounter % 10 === 0) {
     const star = document.createElement('div');
     star.classList.add('star');
-    star.style.left = '0px';
-    star.style.top = 8 + (35 * i) + 'px';
     starContainer.appendChild(star);
   }
 }
 
-
-function winGame() {
-  gameCanvas.style.display = 'none';
-  winBanner.style.display = 'block';
-  restartGameButton.style.display = 'block'; // Show the "Play again" button
+function checkWinCondition() {
+  if (caughtMiceCounter === totalMiceToWin) {
+    winGame();
+  }
 }
-
-
-let touchStartX = null;
-let touchStartY = null;
-
-document.addEventListener('touchstart', (event) => {
-  touchStartX = event.touches[0].clientX;
-  touchStartY = event.touches[0].clientY;
-});
-
-document.addEventListener('touchmove', (event) => {
-  event.preventDefault();
-
-  let currentTop = parseInt(cat.style.top);
-  let currentLeft = parseInt(cat.style.left);
-
-  const touchCurrentX = event.touches[0].clientX;
-  const touchCurrentY = event.touches[0].clientY;
-
-  const moveX = touchCurrentX - touchStartX;
-  const moveY = touchCurrentY - touchStartY;
-
-  cat.style.top = Math.max(0, Math.min(575, currentTop + moveY)) + 'px';
-  cat.style.left = Math.max(0, Math.min(775, currentLeft + moveX)) + 'px';
-
-  touchStartX = touchCurrentX;
-  touchStartY = touchCurrentY;
-
-  checkForCollisions();
-
-
-  
-});
