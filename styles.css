@@ -1,5 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=block');
 
+@keyframes flash {
+  0%, 100% {opacity: 1;}
+  50% {opacity: 0;}
+}
+
+#escape-warning {
+  position: absolute;
+  left: -15%;
+  top: calc(25% + 125px);
+  transform: translateX(-50%);
+  font-size: 9px;
+  text-align: center;
+  animation: flash 1s linear infinite;
+  color: #ff0000;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add shadow to the text */
+}
+
+
 .hidden {
   display: none;
 }
@@ -11,11 +29,14 @@ h1 {
   transform: translateX(-50%);
   margin: 0;
   font-size: 36px;
+  transform: translateX(-50%);
+  z-index: 10; /* Make sure the title is above other elements */
+  text-shadow: 2px 6px 8px rgb(17, 255, 0); /* Add a shadow to the title */
 }
 
 body {
   font-family: 'Press Start 2P', cursive;
-  background-color: #f4f4f4;
+  background-color: #636161;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -65,9 +86,9 @@ body {
 #game-canvas {
   position: relative;
   width: 800px;
-  height: 600px;
-  background-color: #ffffff;
-  border: 2px solid #000000;
+  height: 500px;
+  background-color: #000000;
+  border: 2px solid #13d302;
   margin: 70px auto 0; /* Add a margin to make room for the title */
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5); /* Add a shadow to create a 3D effect */
 }
@@ -77,20 +98,12 @@ body {
   display: none;
 }
 
-#game-title {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10; /* Make sure the title is above other elements */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a shadow to the title */
-}
 
 
 .star {
   position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   background-image: url('images/star.gif');
   background-size: cover;
 }
@@ -98,8 +111,8 @@ body {
 .cat,
 .mouse {
   position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 80px;
+  height: 80px;
 }
 
 .cat {
@@ -112,25 +125,37 @@ body {
   background-size: cover;
 }
 
+#mouse-jail-title {
+  position: absolute;
+  left: -15%;
+  top: 10%; 
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  text-align: center;
+  color: #000000;
+}
+
 #mouse-jail {
   position: absolute;
   width: 220px;
   height: 125px;
-  background-color: #cccccc;
   border: 2px solid #000000;
   left: calc(-65% + 400px);
   top: 25%;
   transform: translate(-50%, -50%);
+  background-color: #050303;
+  background-size: cover;
+  opacity: 0.8;
 }
-
 
 #star-container {
   position: absolute;
-  width: 150px;
-  height: 40px;
-  right: 0;
+  width: 35px;
+  height: 500px;
+  right: -40px;
   top: 0;
 }
+
 
 
 #win-banner {
